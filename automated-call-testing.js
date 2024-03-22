@@ -49,6 +49,7 @@ async function startTestCall() {
   if (!isOnCall) {
     count++;
     console.log(`Starting Call #${count}`)
+    xapi.Command.UserInterface.Message.TextLine.Display({ Text: `Test ${count} out of ${callQuantity}`, X: 5000, Y: 1 })
     xapi.Command.Dial({ Number: callDestination, DisplayName: `Call: [${count}]`, TrackingData: `Call: [${count}]` });
   };
 };
@@ -71,11 +72,12 @@ xapi.Event.CallDisconnect.on(event => {
       } else {
         count = 0;
         console.warn('Call Testing has Concluded, deactivating Macro');
-        setTimeout(async()=>{
+        xapi.Command.UserInterface.Message.TextLine.Display({ Text: `All ${callQuantity} tests(s) Complete`, X: 5000, Y: 1 })
+        setTimeout(async () => {
           await xapi.Command.Macros.Macro.Deactivate({ Name: _main_macro_name() });
           await xapi.Command.Macros.Runtime.Restart();
         }, 1000)
-        
+
       }
     }, callDelay * 1000);
   }
